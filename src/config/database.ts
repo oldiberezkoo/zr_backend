@@ -1,17 +1,20 @@
 import mongoose from "mongoose"
 import { log } from "../utils/log"
 
-const connect = () => {
+const connect = async (): Promise<void> => {
 	try {
-		mongoose.connect(process.env.MONGODB_URI! as string, {
-			minPoolSize: Number(process.env.MONGODB_minPoolSize!),
-			maxPoolSize: Number(process.env.MONGODB_maxPoolSize!),
-		})
-		log("INFO", "Соединение с базой данных установлено")
-		log("DEBUG", `Минимальный количество подключений: ${process.env.MONGODB_minPoolSize}`)
-		log("DEBUG", `Максимальный количество подключений: ${process.env.MONGODB_maxPoolSize}`)
+		if (mongoose.connection.readyState === 0) {
+			await mongoose.connect(process.env.MONGODB_URI!, {
+				minPoolSize: Number(process.env.MONGODB_minPoolSize!),
+				maxPoolSize: Number(process.env.MONGODB_maxPoolSize!),
+			})
+			log("INFO", "Соединение с базой данных установлено")
+			log("DEBUG", `Минимальное количество подключений: ${process.env.MONGODB_minPoolSize}`)
+			log("DEBUG", `Максимальное количество подключений: ${process.env.MONGODB_maxPoolSize}`)
+		}
 	} catch (error) {
-		log("ERROR", "Ошибка при подключении к базе данных")
+		log("ERROR", `Ошибка при подключении к базе данных: ${error}`)
+		process.exit(1)
 	}
 }
 

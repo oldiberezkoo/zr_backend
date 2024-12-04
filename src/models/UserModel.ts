@@ -70,6 +70,6 @@ const UserSchema = new mongoose.Schema<UserInterface>(
 	}
 )
 
-const User = mongoose.model<UserInterface>("User", UserSchema)
+const UserModel = mongoose.model<UserInterface>("User", UserSchema)
 
-export default User
+export default UserModel

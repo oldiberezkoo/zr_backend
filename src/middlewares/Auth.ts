@@ -1,4 +1,4 @@
-import { User } from "../models/user"
+import UserModel from "../models/UserModel"
 import { log } from "../utils/log"
 
 const authenticate = async (c: any, next: any) => {
@@ -7,11 +7,11 @@ const authenticate = async (c: any, next: any) => {
 		if (!token) {
 			return c.json({ error: "Токен отсутствует" }, 401)
 		}
-		const accessToken = token.split(" ")[1]
+		const accessToken = token
 		if (!accessToken) {
 			return c.json({ error: "Неавторизованный: Неверный формат токена" }, 401)
 		}
-		const user = await User.findOne({ accessToken })
+		const user = await UserModel.findOne({ accessToken })
 		if (!user) {
 			return c.json({ error: "Неавторизованный: Пользователь не найден" }, 401)
 		}
